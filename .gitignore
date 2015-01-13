@@ -5,4 +5,7 @@ Module.symvers
 *.cmd
 .tmp_versions/
 *.c~
+*.h~
+*~
 *.mod.c
+logger

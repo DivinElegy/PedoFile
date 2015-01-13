@@ -1,7 +1,9 @@
-obj-m += logger.o
+CC = gcc -Wall
 
-all:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+all: logger
+
+logger: logger.c logger.h
+	$(CC) logger.c -o logger
 
 clean:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+	rm -f *.o *.bak *.out ex
