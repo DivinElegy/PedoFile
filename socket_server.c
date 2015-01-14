@@ -1,27 +1,72 @@
 #include "socket_server.h"
 
-int listen_fd, comm_fd;
+int listen_fd, fdmax, newfd;
+int i;
+fd_set master;
+fd_set read_fds;
+struct timeval tv;
  
 void start_socket_server(int port)
 {
     struct sockaddr_in servaddr;
  
-    listen_fd = socket(AF_INET, SOCK_STREAM, 0);
- 
+    FD_ZERO(&master);
+    FD_ZERO(&read_fds);
     bzero( &servaddr, sizeof(servaddr));
- 
+
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htons(INADDR_ANY);
     servaddr.sin_port = htons(port);
- 
+
+    tv.tv_sec = 0;
+    tv.tv_usec = 100;
+
+    listen_fd = socket(AF_INET, SOCK_STREAM, 0);
     bind(listen_fd, (struct sockaddr *) &servaddr, sizeof(servaddr));
- 
     listen(listen_fd, 10);
-    comm_fd = accept(listen_fd, (struct sockaddr*) NULL, NULL);
+ 
+    FD_SET(listen_fd, &master);
+    fdmax = listen_fd;
+}
+
+void update_clients()
+{
+    read_fds = master;
+    select(fdmax+1, &read_fds, NULL, NULL, &tv);
+
+    for(i = 0; i<= fdmax; i++)
+    {
+        if (FD_ISSET(i, &read_fds))
+        {
+            if (i == listen_fd)  //new connection
+            {
+                newfd = accept(listen_fd, (struct sockaddr *) NULL, NULL);
+
+		if (newfd != -1)
+                {
+                    fprintf(stderr, "New connection!");
+                    FD_SET(newfd, &master);
+
+                    if (newfd > fdmax) {
+                        fdmax = newfd;
+                    }
+                }
+            }
+         }
+     }
 }
 
 void write_socket(char *str)
 {
-    fprintf(stderr, "%s", str);
-    write(comm_fd, str, strlen(str)+1); 
+     //send data to erryone
+    for(i = 0; i<= fdmax; i++)
+    {
+        if(FD_ISSET(i, &master))
+        {
+            if(i != listen_fd) //erryone except us
+            {
+                write(i, str, strlen(str)+1);
+            }
+        }
+    }
 }

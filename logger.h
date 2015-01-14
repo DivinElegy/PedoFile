@@ -14,6 +14,5 @@
 #define KEY_PRESS 1
 #define KEY_HELD 2
 
-#define SOCKET_SERVER_PORT 1729
-
-void keylogger();
+void init_logger();
+void log_key(char *keycode);

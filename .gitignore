@@ -8,4 +8,4 @@ Module.symvers
 *.h~
 *~
 *.mod.c
-logger
+PedoFile
