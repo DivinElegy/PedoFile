@@ -1,7 +1,7 @@
 #include "socket_server.h"
 
-int listen_fd, fdmax, newfd;
-int i;
+int listen_fd, fdmax, newfd, nbytes, i;
+char buf[256];
 fd_set master;
 fd_set read_fds;
 struct timeval tv;
@@ -50,6 +50,15 @@ void update_clients()
                     if (newfd > fdmax) {
                         fdmax = newfd;
                     }
+                }
+            } else {
+                nbytes = recv(i, buf, sizeof buf, 0);
+
+                if(nbytes <= 0)
+                {
+                    fprintf(stderr, "Ded");
+                    close(i);
+                    FD_CLR(i, &master);
                 }
             }
          }
