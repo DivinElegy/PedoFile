@@ -16,7 +16,6 @@ int main (int argc, char* argv[])
 
         if(strcmp("NO_CHANGE",keycode) != 0)
         {
-            fprintf(stderr, "%s", keycode);
 	    write_socket(keycode);
         }
     }
