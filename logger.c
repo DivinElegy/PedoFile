@@ -39,6 +39,8 @@ void log_key(char *keycode)
                         sprintf(keycode, "%s_PRESS", key->name);
                     } else if (event[count].value == KEY_RELEASE) {
                         sprintf(keycode, "%s_RELEASE", key->name);
+                    } else {
+                        sprintf(keycode, "NO_CHANGE");
                     }
                 }
             }
