@@ -2,10 +2,10 @@ Simple application to read keypress events.
 
 Setting Up
 ==========
--Set up libhid (more about that below)
--Set KEYBOARD_DEVICE in logger.h to the relevant /dev/input node.
--Needs to be run as root.
--Start policyserve.sh as root before starting PedoFile (thanks Adobe ლ(ಠ益ಠლ)).
+- Set up libhid (more about that below)
+- Set KEYBOARD_DEVICE in logger.h to the relevant /dev/input node.
+- Needs to be run as root.
+- Start policyserve.sh as root before starting PedoFile (thanks Adobe ლ(ಠ益ಠლ)).
 
 libhid
 ======
