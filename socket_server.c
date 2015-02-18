@@ -1,6 +1,6 @@
 #include "socket_server.h"
 
-int listen_fd, fdmax, newfd, nbytes, i;
+int listen_fd, fdmax, newfd, nbytes, i, j, k;
 char buf[256];
 fd_set master;
 fd_set read_fds;
@@ -22,13 +22,14 @@ void start_socket_server(int port)
     tv.tv_usec = 100;
 
     listen_fd = socket(AF_INET, SOCK_STREAM, 0);
+
     bind(listen_fd, (struct sockaddr *) &servaddr, sizeof(servaddr));
     listen(listen_fd, 10);
  
     FD_SET(listen_fd, &master);
     fdmax = listen_fd;
 }
-
+ 
 void update_clients()
 {
     read_fds = master;
@@ -44,7 +45,9 @@ void update_clients()
 
 		if (newfd != -1)
                 {
+                    int val;
                     fprintf(stderr, "New connection!");
+
                     FD_SET(newfd, &master);
 
                     if (newfd > fdmax) {
@@ -53,28 +56,29 @@ void update_clients()
                 }
             } else {
                 nbytes = recv(i, buf, sizeof buf, 0);
-
                 if(nbytes <= 0)
                 {
-                    fprintf(stderr, "Ded");
+                    fprintf(stderr, "Dead");
                     close(i);
                     FD_CLR(i, &master);
+                } else {
+                    //Recieved data would be dealt with here but I can't make flash send it for some reasons
                 }
             }
-         }
-     }
+        }
+    }
 }
 
 void write_socket(char *str)
 {
      //send data to erryone
-    for(i = 0; i<= fdmax; i++)
+    for(k = 0; k<= fdmax; k++)
     {
-        if(FD_ISSET(i, &master))
+        if(FD_ISSET(k, &master))
         {
-            if(i != listen_fd) //erryone except us
+            if(k != listen_fd) //erryone except us
             {
-                write(i, str, strlen(str)+1);
+                write(k, str, strlen(str)+1);
             }
         }
     }
