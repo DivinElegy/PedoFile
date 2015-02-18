@@ -4,6 +4,8 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 void start_socket_server(int port);
 void write_socket(char *str);

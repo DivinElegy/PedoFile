@@ -45,7 +45,6 @@ void update_clients()
 
 		if (newfd != -1)
                 {
-                    int val;
                     fprintf(stderr, "New connection!");
 
                     FD_SET(newfd, &master);
@@ -78,7 +77,10 @@ void write_socket(char *str)
         {
             if(k != listen_fd) //erryone except us
             {
-                write(k, str, strlen(str)+1);
+                if(write(k, str, strlen(str)+1) == -1)
+                {
+                    fprintf(stderr, "Failed to write.");
+                }
             }
         }
     }
