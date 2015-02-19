@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define KEYBOARD_DEVICE "/dev/input/event4"
+#define KEYBOARD_DEVICE "/dev/input/event0"
 #define KEY_RELEASE 0
 #define KEY_PRESS 1
 #define KEY_HELD 2

@@ -8,16 +8,18 @@ int main (int argc, char* argv[])
     char keycode[100];
     bzero(keycode, 100);
     init_logger();
-    start_socket_server(SOCKET_SERVER_PORT);
     init_pac();
+//    set_led_state(1, 1);
+    start_socket_server(SOCKET_SERVER_PORT);
 
     while (1)
-    { 
+    {
         update_clients();
         log_key(keycode);
 
         if(strcmp("NO_CHANGE",keycode) != 0)
         {
+            fprintf(stderr, "%s\n", keycode);
 	    write_socket(keycode);
         }
     }
