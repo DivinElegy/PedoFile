@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <usb.h>
+#include <string.h>
 
 #define PAC_USB_TIMEOUT	100
 
@@ -28,15 +29,17 @@ typedef struct _PAC_DATA_BLOCK {
 static int const PAC_PATH_IN[PAC_PATHLEN] =  { 0x00090001 };
 static int const PAC_PATH_OUT[PAC_PATHLEN] = { 0x0008004b };
 
+#define BYTE1_LED_INDEX_START   1
+#define BYTE1_LED_INDEX_END     8
+#define BYTE2_LED_INDEX_START   9
+#define BYTE2_LED_INDEX_END     16
+
+#define LED_INDEX_START         BYTE1_LED_INDEX_START
+#define LED_INDEX_END           BYTE2_LED_INDEX_END
+
 void init_pac();
-
-/* Set the LED states */
-int set_led_state(PacData *data);
-
-/* Called when completely done talking to pac -- the is the opposite of init_pac*/
-void cleanup_pac(void);
-
-/* Close the HID after done doing get/set */
-int close_pac();
+void set_led_state(int led, int state);
+void cleanup_pac();
+void close_pac();
 
 

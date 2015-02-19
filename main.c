@@ -1,3 +1,4 @@
+#include "pacdrive.h"
 #include "socket_server.h"
 #include "logger.h"
 #include "main.h"
@@ -8,6 +9,7 @@ int main (int argc, char* argv[])
     bzero(keycode, 100);
     init_logger();
     start_socket_server(SOCKET_SERVER_PORT);
+    init_pac();
 
     while (1)
     { 
