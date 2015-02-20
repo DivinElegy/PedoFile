@@ -20,7 +20,7 @@ void init_logger()
     }
 }
 
-void log_key(char *keycode)
+void log_key(KeyState *state)
 {    
     // Read a keypress
     bytes_read = read(keyboard, event, event_size * 64);
@@ -36,12 +36,16 @@ void log_key(char *keycode)
                 {
                     if (event[count].value == KEY_PRESS)
                     {
-                        sprintf(keycode, "%s_PRESS", key->name);
+                        strcpy(state->key, key->name);
+                        strcpy(state->state, "PRESS");
                     } else if (event[count].value == KEY_RELEASE) {
-                        sprintf(keycode, "%s_RELEASE", key->name);
+                        strcpy(state->key, key->name);
+                        strcpy(state->state, "RELEASE");
                     } else {
-                        sprintf(keycode, "NO_CHANGE");
+                        strcpy(state->state, "NO_CHANGE");
                     }
+
+                    break;
                 }
             }
         }
