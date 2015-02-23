@@ -29,6 +29,7 @@ int main (int argc, char* argv[])
             {
                 if (strcmp(map->key, key_state.key) == 0)
                 {
+		   fprintf(stderr, "state is %d", strcmp("PRESS", key_state.state) ? 1 : 0);
                    //use mapping and state to call set_led_state(map->led, state)
                    break;
                 }
