@@ -9,7 +9,6 @@ int main (int argc, char* argv[])
 {
     struct lightmap *map = NULL;
     KeyState key_state;
-    memset(&key_state, '\0', sizeof(key_state));
     char keycode[100];
     bzero(keycode, 100);
 
@@ -25,7 +24,6 @@ int main (int argc, char* argv[])
         if(strcmp("NO_CHANGE",key_state.state) != 0)
         {
             sprintf(keycode, "%s_%s", key_state.key, key_state.state);
-            fprintf(stderr, "%s\n", keycode);
 
             for (map = light_map; map->key != NULL; map++)
             {
